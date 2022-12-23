@@ -1,0 +1,11 @@
+print ((
+3 + 2 * 5));
+
+print "help";
+
+let x 10;
+
+print x+x+x;
+let y x+x+x;
+
+print !y;

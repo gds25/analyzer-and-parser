@@ -1,0 +1,11 @@
+let x !5*2;
+let x x + y; // this is a semantic error but ought to parse
+
+let z "help;";
+
+print "hello" + " world";
+
+print z * 3;
+
+print "what are you doing?
+;

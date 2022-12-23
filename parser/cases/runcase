@@ -1,0 +1,72 @@
+ex=~/prog3
+
+cd $LIB/public/p3
+
+[ ! -e $ex ] && echo Cannot find the program, please build it! && exit 1
+
+printonly=no
+[ "$1" = "-v" ] && printonly=yes && shift
+
+declare -A cases
+cases[badfile]="noSuchFile"
+cases[manyfiles]="bad1.in bad2.in"
+cases[bad1]="bad1.in"
+cases[bad2]="bad2.in"
+cases[bad3]="bad3.in"
+cases[bad4]="bad4.in"
+cases[bad4si]="< bad4.in"
+cases[good1]="good1.in"
+cases[good2]="good2.in"
+cases[good3]="good3.in"
+cases[good4]="good4.in"
+cases[good5]="good5.in"
+cases[good6]="good6.in"
+
+args=""
+if [ $# -eq 1 ];
+then
+	if [ ${cases[$1]+_} ];
+	then
+		args=${cases[$1]}
+	fi
+fi
+
+if [ "$args" = "" ];
+then
+	echo Case $1 not found
+	echo
+	echo Test cases are:
+	for v in "${!cases[@]}" ;
+	do
+		echo $v: prog3 ${cases[$v]}
+	done
+	exit 0
+fi
+
+ofile=`mktemp`
+
+[ $printonly = "yes" ] && echo prog3 $args && exit
+
+echo RUNNING prog3 $args
+
+score=0
+
+eval $ex $args 2>&1 | tee $ofile
+
+if [ "$1" = "bad1" -o "$1" = "bad2" -o "$1" = "bad3" -o "$1" = "bad4" -o "$1" = "bad4si" ];
+then
+	rc=`egrep '[0-9]+: [a-zA-Z]+' $ofile | wc -l`
+	[ $rc -gt 0 ] && score=1
+else
+	diff $ofile ${1}.correct
+	### cp $ofile ${1}.correct
+	[ $? -eq 0 ] && score=1
+fi
+
+echo RESULT: $1 "[ " $score " / 1 ]"
+
+rm $ofile
+
+exit $rc
+
+
