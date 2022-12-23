@@ -1,87 +1,30 @@
 /*
- * lex.h
- * SPRING 2020
+ * parse.h
  */
 
-#ifndef LEX_H_
-#define LEX_H_
+#ifndef PARSERINT_H_
+#define PARSERINT_H_
 
-#include <string>
 #include <iostream>
-using std::string;
-using std::istream;
-using std::ostream;
 
-enum Token {
-	// keywords
-  PROGRAM,
-	PRINT,
-	BEGIN,
-	END,
-	IF,
-	THEN,
+#include "lex.h"
 
-	// an identifier
-	IDENT,
+extern bool Prog(istream& in, int& line);
+extern bool Stmt(istream& in, int& line);
+extern bool Decl(istream& in, int& line);
+extern bool PrintStmt(istream& in, int& line);
+extern bool IfStmt(istream& in, int& line);
+extern bool ReadStmt(istream& in, int& line);
+extern bool IdList(istream& in, int& line, LexItem tok);
+extern bool VarList(istream& in, int& line);
+extern bool Var(istream& in, int& line);
+extern bool AssignStmt(istream& in, int& line);
+extern bool ExprList(istream& in, int& line);
+extern bool LogicExpr(istream& in, int& line);
+extern bool Expr(istream& in, int& line);
+extern bool Term(istream& in, int& line);
+extern bool SFactor(istream& in, int& line);
+extern bool Factor(istream& in, int& line, int sign);
+extern int ErrCount();
 
-	// an integer and string constant
-	ICONST,
-	RCONST,
-	SCONST,
-
-	// the operators, parens, semicolon
-	PLUS,
-	MINUS,
-	MULT,
-	DIV,
-	EQ,
-	LPAREN,
-	RPAREN,
-	SCOMA,
-	COMA,
-	// any error returns this token
-	ERR,
-
-	// when completed (EOF), return this token
-	DONE
-};
-
-class LexItem {
-		Token token;
-		string lexeme;
-		int lnum;
-
-	public:
-		LexItem() {
-			token = ERR;
-			lnum = -1;
-		}
-		LexItem(Token token, string lexeme, int line) {
-			this->token = token;
-			this->lexeme = lexeme;
-			this->lnum = line;
-		}
-
-		bool operator==(const Token token) const {
-			return this->token == token;
-		}
-		bool operator!=(const Token token) const {
-			return this->token != token;
-		}
-
-		Token GetToken() const {
-			return token;
-		}
-		string GetLexeme() const {
-			return lexeme;
-		}
-		int GetLinenum() const {
-			return lnum;
-		}
-};
-
-extern ostream& operator<<(ostream &out, const LexItem &tok);
-
-extern LexItem getNextToken(istream &in, int &linenum);
-
-#endif /* LEX_H_ */
+#endif /* PARSERINT_H_ */
